@@ -19,7 +19,7 @@ class DataRecord:
 
     def __repr__(self) -> str:
         return (
-            f"DataRecord(filename={self.filename}), "
+            f"DataRecord(filename={self.filename}, "
             f"rows={self.row_count}, "
             f"columns={self.column_names}, "
             f"loaded_at={self.loaded_at})"
