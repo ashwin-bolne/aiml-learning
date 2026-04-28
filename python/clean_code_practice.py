@@ -1,19 +1,21 @@
 import pandas as pd
 
-class BaseDataError(Exception):
+REQUIRED_COLUMNS = ["age"]
+
+class DataValidatorError(Exception):
     """
-    Base class for all custom exceptionas for clean_code_practice file code exceptions
+    Base class for data validation related errors.
     """
     pass 
 
-class EmptyDatasetError(BaseDataError):
+class EmptyDatasetError(DataValidatorError):
     """
     Raised when the dataset is empty
     """
     
     pass 
 
-class MissingColumnError(BaseDataError):
+class MissingColumnError(DataValidatorError):
     """
     Raised when required column is missing.
     """
@@ -25,7 +27,7 @@ def load_csv(path: str) -> pd.DataFrame:
     Load a CSV into a pandas DataFrame.
 
     Args:
-        path (str): path to the CSV file.
+        path (str): Path to the CSV file.
     
     Returns:
         pd.DataFrame: Loaded dataset.
@@ -33,6 +35,10 @@ def load_csv(path: str) -> pd.DataFrame:
     Raises:
         FileNotFoundError: If the file does not exist.
         pd.errors.EmptyDataError: if the file is empty.     
+    
+    Example:
+        >>> load_csv("data/sample.csv")
+        DataFrame with loaded data
 
     """
     return pd.read_csv(path)
@@ -47,16 +53,22 @@ def validate_dataframe(df: pd.DataFrame) -> None:
     Raises:
         EmptyDatasetError: If the DataFrame is empty.
         MissingColumnError: If required columns are missing.
+    
+    Example:
+        >>> validate_dataframe(dataframe)
+        None
     """
     if df.empty:
         raise EmptyDatasetError("Dataset is empty")
     
-    if "age" not in df.columns:
-        raise MissingColumnError("Column 'age' is missing.")
+    missing_cols = [col for col in REQUIRED_COLUMNS if col not in df.columns]
+
+    if missing_cols:
+        raise MissingColumnError(f"Missing columns: {missing_cols}")
 
 def analyze_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Generate descriptive statistics for the dataset.
+    Generate descriptive statistics for numeric columns.
 
     Args:
         df (pd.DataFrame): Input dataset.
@@ -84,6 +96,8 @@ def process_data(path: str) -> pd.DataFrame:
     df = load_csv(path)
     validate_dataframe(df)
     stats = analyze_dataframe(df)
+
+if __name__ == "__main__":
+    stats = process_data("path")
     print(stats)
-    return df
 
