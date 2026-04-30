@@ -25,6 +25,20 @@ def fill_numeric_nulls(df: pd.DataFrame, strategy: str = "median") -> pd.DataFra
     return df.fillna(fill_values)
 
 
+def fill_categorical_nulls(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Fill missing values in categorical columns using mode.
+    """
+    cat_cols = df.select_dtypes(include=["object", "category", "string"]).columns
+
+    fill_values = {
+        col: df[col].mode()[0]
+        for col in cat_cols
+        if df[col].isnull().any()
+    }
+
+    return df.fillna(fill_values)
+
 def run_pipeline(df: pd.DataFrame) -> pd.DataFrame:
     """
     Runs full pandas transformation pipeline
@@ -33,6 +47,7 @@ def run_pipeline(df: pd.DataFrame) -> pd.DataFrame:
         df
         .pipe(drop_high_null_columns, thresold=0.5)
         .pipe(fill_numeric_nulls, strategy="median")
+        .pipe(fill_categorical_nulls)
     )
 
 if __name__ == "__main__":
