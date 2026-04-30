@@ -62,6 +62,22 @@ def add_features(df: pd.DataFrame) -> pd.DataFrame:
         )
     )
    
+def encode_categoricals(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    one-hot encode categorical columns
+    """
+    cat_cols = df.select_dtypes(include=["object", "category", "string"]).columns
+    df_encoded = pd.get_dummies(df, columns=cat_cols, drop_first=True)
+
+    return df_encoded.astype(int, errors="ignore")
+
+def drop_redundant_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Drop columns that leak target information or are redundant
+    """
+    cols_to_drop = ["alive_yes"]
+    return df.drop(columns=[col for col in cols_to_drop if col in df.columns])
+
 def run_pipeline(df: pd.DataFrame) -> pd.DataFrame:
     """
     Runs full pandas transformation pipeline
@@ -72,13 +88,14 @@ def run_pipeline(df: pd.DataFrame) -> pd.DataFrame:
         .pipe(fill_numeric_nulls, strategy="median")
         .pipe(fill_categorical_nulls)
         .pipe(add_features)
+        .pipe(encode_categoricals)
+        .pipe(drop_redundant_columns)
     )
 
 if __name__ == "__main__":
-    import seaborn as sns
 
     df = sns.load_dataset("titanic")
     df_clean = run_pipeline(df)
 
-    print(df_clean[["sibsp", "parch", "family_size", "age", "age_group"]].head())
-    print(df_clean.isnull().sum())
+    print(df_clean.head())
+    print("\nColumns:\n", df_clean.columns)
