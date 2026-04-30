@@ -18,7 +18,8 @@ def load_data() -> pd.DataFrame:
 
 def analyze_titanic(df: pd.DataFrame) -> dict:
     """
-    Analysis of titanic dataset
+    Performs exploratory data analysis on the Titanic dataset
+    and returns key statistical insights as a dictionary.
 
     Args:
         df (pd.Dataframe): input dataset
