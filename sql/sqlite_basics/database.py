@@ -30,5 +30,11 @@ def create_table(conn: sqlite3.Connection) -> None:
     Args:
         conn (sqlite3.connection): Active database connection.
     """
+    with open("sql/sqlite_basics/schema.sql", "r") as file:
+        sql_script = file.read()
+
+    cursor = conn.cursor()
+    cursor.executescript(sql_script)
     
+    conn.commit()
 
