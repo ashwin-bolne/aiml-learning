@@ -1,4 +1,4 @@
-from database import get_connection, create_table, insert_quality_run
+from database import get_connection, create_table, insert_quality_run, get_worst_datasets
 from datetime import datetime 
 
 def main():
@@ -15,6 +15,11 @@ def main():
     }
 
     insert_quality_run(conn, sample_data)
+    worst = get_worst_datasets(conn, 3)
+
+    print("\nWorst datasets:")
+    for row in worst:
+        print(row)
 
     conn.close()
 

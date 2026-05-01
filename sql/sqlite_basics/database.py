@@ -71,3 +71,27 @@ def insert_quality_run(conn: sqlite3.Connection, result: dict) -> None:
     cursor.execute(query, values)
     
     conn.commit()
+
+def get_worst_datasets(conn: sqlite3.Connection, n: int = 5):
+    """
+    Fetch top N datasets with lowest quality score.
+
+    Args:
+        conn (sqlite3.Connection): Active databse connection
+        n (int): number of results
+
+    Returns:
+        list[tuple]: worst dataset rows
+    """
+
+    query = """
+    SELECT * 
+    FROM quality_runs
+    ORDER BY quality_score ASC
+    LIMIT ? 
+    """
+
+    cursor = conn.cursor()
+    cursor.execute(query, (n,))
+
+    return cursor.fetchall()
