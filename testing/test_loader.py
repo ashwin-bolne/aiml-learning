@@ -14,3 +14,10 @@ def test_load_empty_csv():
 def test_load_missing_file():
     with pytest.raises(FileNotFoundError):
         load_csv("testing/data/does_not_exist.csv")
+
+def test_schema_mismatch():
+    df = load_csv("testing/data/sample_bad.csv")
+
+    expected_cols = {"name", "age", "fare"}
+
+    assert not expected_cols.issubset(set(df.columns))
