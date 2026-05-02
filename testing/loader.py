@@ -45,7 +45,7 @@ def load_json(path: str) -> pd.DataFrame:
         data = json.load(f)
 
     if not data:
-        raise ValueError("Empty dataset")
+        raise ValueError("empty dataset")
     
     df = pd.DataFrame(data)
     return df 
