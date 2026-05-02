@@ -10,3 +10,7 @@ def test_load_valid_csv():
 def test_load_empty_csv():
     with pytest.raises(ValueError, match="empty"):
         df = load_csv("testing/data/sample_empty.csv")
+
+def test_load_missing_file():
+    with pytest.raises(FileNotFoundError):
+        load_csv("testing/data/does_not_exist.csv")
