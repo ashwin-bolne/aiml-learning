@@ -12,7 +12,6 @@ class EmptyDatasetError(DataValidatorError):
     """
     Raised when the dataset is empty
     """
-    
     pass 
 
 class MissingColumnError(DataValidatorError):
